@@ -9,9 +9,8 @@
 # If a job is queued or running it tells yu anf gives the position and refreshes each minute
 # If it is finished then it creates the gnuplot file and asembles the lines
 # for jsmol
+
 # Open the random.txt file to get the job number from the file saved when it was queued
-# array to hold the uppercase to lowercase resname
-$threeletter = array('ALA' => 'Ala', 'CYS' => 'Cys', 'CYX' => 'Cys', 'ASP' => 'Asp', 'GLU' => 'Glu', 'PHE' => 'Phe', 'GLY' => 'Gly', 'HIS' => 'His', 'HID' => 'His', 'HIE' => 'His', 'HIP' => 'His', 'ILE' => 'Ile', 'LYS' => 'Lys', 'LEU' => 'Leu', 'MET' => 'Met', 'ASN' => 'Asn', 'PRO' => 'Pro', 'GLN' => 'Gln', 'ARG' => 'Arg', 'SER' => 'Ser', 'THR' => 'Thr', 'VAL' => 'Val', 'TRP' => 'Trp', 'TYR' => 'Tyr');
 
 # The main driver code is here, we get the jobid and then check the queue system to see if it is
 # Queded or Running or exiting, if it is neither then we check for a results file and if there is one we assume it is finished
@@ -156,6 +155,8 @@ function running($jobid) {
 
 # The function for if we find a job is finished
 function finished($jobid) {
+    # array to hold the uppercase to lowercase resname
+    $threeletter = array('ALA' => 'Ala', 'CYS' => 'Cys', 'CYX' => 'Cys', 'ASP' => 'Asp', 'GLU' => 'Glu', 'PHE' => 'Phe', 'GLY' => 'Gly', 'HIS' => 'His', 'HID' => 'His', 'HIE' => 'His', 'HIP' => 'His', 'ILE' => 'Ile', 'LYS' => 'Lys', 'LEU' => 'Leu', 'MET' => 'Met', 'ASN' => 'Asn', 'PRO' => 'Pro', 'GLN' => 'Gln', 'ARG' => 'Arg', 'SER' => 'Ser', 'THR' => 'Thr', 'VAL' => 'Val', 'TRP' => 'Trp', 'TYR' => 'Tyr');
     echo "<head>";
     echo "<title>::: Finished  at the Critital Residue Interface prediction server :::</title>";
     echo "<meta charset=\"utf-8\">";
@@ -167,8 +168,8 @@ function finished($jobid) {
     $output = shell_exec('cat /var/www/html/critires/scripts/jscript.scr'); # Setup jsmol environment
     echo $output; # Feed it to the browser
     # Now get the number of residues in the PDB file for the gnuplot xaxis
-    $firstres = shell_exec('grep CA input.pdb |head -1| awk \'{print $6}\'');
-    $finalres = shell_exec('grep CA input.pdb |tail -1| awk \'{print $6}\'');
+    $firstres = shell_exec('grep ^ATOM input.pdb | grep CA |head -1| awk \'{print $6}\'');
+    $finalres = shell_exec('grep ^ATOM input.pdb | grep CA |tail -1| awk \'{print $6}\'');
     $firstres = str_replace("\n", "", $firstres);
     $finalres = str_replace("\n", "", $finalres);
     $gnufile = fopen("results.gnu", "w");
