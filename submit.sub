@@ -8,10 +8,10 @@
 echo Running on host `hostname`
 echo Time is `date`
 
-cd $working
+cd /scratch/working/$random
 echo Working directory is `pwd`
-touch $working/made_it
+touch /scratch/working/$random/made_it
 
 # run the job
 /var/www/html/critires/scripts/critires.sh
-cp $working/$random/* /var/www/html/critires/results/$random/
+cp /scratch/working/$random/* /var/www/html/critires/results/$random/.
