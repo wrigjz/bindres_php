@@ -21,6 +21,7 @@ $threeletter = array('ALA' => 'Ala', 'CYS' => 'Cys', 'CYX' => 'Cys', 'ASP' => 'A
 $jobfile = fopen("jobid.txt", "r") or die("Unable to open file!");
 $jobid = fgets($jobfile);
 fclose($jobfile);
+
 # Get the status and give the status as the header
 $my_temp = shell_exec("/usr/local/bin/qstat | grep $jobid");
 $job_status = preg_split('/\s+/', $my_temp);
@@ -82,6 +83,7 @@ function queuedup($jobid) {
     echo "<pre>$my_status</pre>";
     echo "<meta http-equiv=\"refresh\" content=\"60\"/>";
 }
+
 # The function for if we find a job is running
 # In this case we parse the error_link.txt file and try to give feedback on how the 
 # processs is  going
@@ -151,6 +153,7 @@ function running($jobid) {
     }
     echo "<meta http-equiv=\"refresh\" content=\"60\"/>";
 }
+
 # The function for if we find a job is finished
 function finished($jobid) {
     echo "<head>";
