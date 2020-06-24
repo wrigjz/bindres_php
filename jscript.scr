@@ -1,0 +1,22 @@
+###################################################################################################
+## Jon Wright, IBMS, Academia Sinica, Taipei, 11529, Taiwan
+## These files are licensed under the GLP ver 3, essentially you have the right
+## to copy, modify and distribute this script but all modifications must be offered
+## back to the original authors
+###################################################################################################
+<script type="text/javascript" src="../../jsmol/JSmol.min.js"></script>
+<script type="text/javascript">
+
+//Jmol.debugCode = true
+
+var myJmol1
+var myInfo1 = {
+height: '100%',
+width: '100%',
+j2sPath: "../../jsmol/j2s",
+use: 'HTML5',
+console: "myJmol1_infodiv",
+debug: false
+};
+
+</script>

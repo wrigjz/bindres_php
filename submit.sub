@@ -1,0 +1,17 @@
+#PBS -N Cri
+#PBS -j eo
+#PBS -e /var/www/html/critires/results/$random/critires.err
+#PBS -q batch
+#PBS -l nodes=1:ppn=4
+# This jobs working directory is set below
+
+echo Running on host `hostname`
+echo Time is `date`
+
+cd $working
+echo Working directory is `pwd`
+touch $working/made_it
+
+# run the job
+/var/www/html/critires/scripts/critires.sh
+cp $working/$random/* /var/www/html/critires/results/$random/
