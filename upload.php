@@ -5,19 +5,19 @@
 ## to copy, modify and distribute this script but all modifications must be offered
 ## back to the original authors
 ###################################################################################################
-# This php ver. 7 script takes a given file and uploads it and checks that is appears to be a valid PDB file
+# This php ver. 7 script takes a given file and uploads it and checks that it appears to be a valid PDB file
 # IT creates a working and a results directory and then queues a Critires job
 
-# Call the mkdirFunc and get the directories and random number back
+# Call the mkdirFunc and get the target, results directories and random number back
 list($rand_target, $target_dir, $result_dir) = mkdirFunc();
 
-# Set the output to go to the scratch/$rand_target directory
+# Set the output to go to the scratch/working/$rand_target directory
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $input_file = $target_dir . "input.pdb";
 $uploadOk = 1;
 $PDBFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-// Check if image file is a actual image or fake image
+// Check if pdb file is a reasonable size or not
 if (isset($_POST["submit"])) {
     $check = filesize($_FILES["fileToUpload"]["tmp_name"]);
     if ($check !== false) {
@@ -28,11 +28,7 @@ if (isset($_POST["submit"])) {
         $uploadOk = 0;
     }
 }
-// Check if file already exists
-if (file_exists($target_file)) {
-    echo "Sorry, file already exists.";
-    $uploadOk = 0;
-}
+
 // Check file size
 if ($_FILES["fileToUpload"]["size"] > 5000000) {
     echo "Sorry, your file is too large.";
@@ -43,6 +39,7 @@ if ($PDBFileType != "pdb") {
     echo "Sorry, only pdb files are allowed.";
     $uploadOk = 0;
 }
+
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.";
@@ -71,6 +68,7 @@ if ($uploadOk == 0) {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+
 # This function makes a unique random number directory in /scratch and results
 function mkdirFunc() {
     mkdirloop:

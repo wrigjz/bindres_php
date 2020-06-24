@@ -10,10 +10,9 @@
 # It creates a working and a results directory and then queues a Critires job
 # Then it submits a critires job to the server
 
-# Retrieve the PDB and chain ids
+# Retrieve the PDB and chain ids and check do a few simple checks on the inputs
 $pdbid = strtolower($_POST["PDBID"]);
 $chain = strtoupper($_POST["CHAIN"]);
-# Check the inputs simply first
 if (strlen($pdbid) != 4) {
     echo "Sorry but PDB IDs are 4 characters";
     exit;
@@ -22,11 +21,13 @@ if (strlen($chain) != 1) {
     echo "Sorry but PDB chain IDs  are 1 characters";
     exit;
 }
-# Call the mkdirFunc and get the directories and random number back
+
+# Call the mkdirFunc and get the target, results directories and random number back
 list($rand_target, $target_dir, $result_dir) = mkdirFunc();
 echo "You entered $pdbid $chain $target_dir<br>";
 $output = $pdbid . " " . $chain;
-# Make list.txt and save it to the scratch directory
+
+# Make the list.txt file and save it to the target directory
 $myfile = $target_dir . "list.txt";
 $listfile = fopen($myfile, "w");
 fwrite($listfile, $output);
@@ -36,9 +37,11 @@ $errfile_handle = fopen($errfile, "w");
 fwrite($errfile_handle, "Preparing and checking the input files\n");
 fclose($errfile_handle);
 
-# Actually run the job
+# Find the right PDB file and extract the chain we want
 echo 'cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh';
 exec('cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh', $out, $ret_var);
+
+# Now submit the job to the qeuue system
 if ($ret_var == 0) {
     echo "We will now queue the Critires job<br>";
     echo '/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "working=' . $target_dir . '" > ' . $result_dir . 'jobid.txt';
@@ -50,6 +53,7 @@ if ($ret_var == 0) {
     exec('echo 999999.limlab >| ' . $result_dir . 'jobid.txt');
 }
 echo "<meta http-equiv=\"refresh\" content=\"5; URL=http://critires.limlab.dnsalias.org/results/$rand_target\" />";
+
 # This function makes a unique random number directory in /scratch and results
 function mkdirFunc() {
     mkdirloop:
