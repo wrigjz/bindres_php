@@ -46,7 +46,7 @@ if ($ret_var == 0) {
     echo "We will now queue the Critires job<br>";
     echo '/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt';
     exec('/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt');
-    exec('ln -s ' . $target_dir . 'error.txt ' . $result_dir . 'error_link.txt');
+    symlink($target_dir . 'error.txt', $result_dir . 'error_link.txt');
 } else {
     echo 'rsync -av ' . $target_dir . ' ' . $result_dir;
     exec('rsync -av ' . $target_dir . ' ' . $result_dir);
@@ -64,7 +64,7 @@ function mkdirFunc() {
         if ($dir_exists == false) {
             mkdir($target_dir, 0700);
             mkdir($result_dir, 0700);
-            copy("index.php", "$result_dir/index.php");
+            symlink("/var/www/html/critires/scripts/index.php", "$result_dir/index.php");
         } else {
             gotomkdirloop;
         }
