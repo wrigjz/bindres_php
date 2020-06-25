@@ -9,7 +9,6 @@
 # If a job is queued or running it tells yu anf gives the position and refreshes each minute
 # If it is finished then it creates the gnuplot file and asembles the lines
 # for jsmol
-
 # Open the random.txt file to get the job number from the file saved when it was queued
 
 # The main driver code is here, we get the jobid and then check the queue system to see if it is
@@ -168,10 +167,12 @@ function finished($jobid) {
     $output = shell_exec('cat /var/www/html/critires/scripts/jscript.scr'); # Setup jsmol environment
     echo $output; # Feed it to the browser
     # Now get the number of residues in the PDB file for the gnuplot xaxis
-    $firstres = shell_exec('grep ^ATOM input.pdb | grep CA |head -1| awk \'{print $6}\'');
-    $finalres = shell_exec('grep ^ATOM input.pdb | grep CA |tail -1| awk \'{print $6}\'');
+    $firstres = shell_exec('grep CA input.pdb |head -1| awk \'{print $6}\'');
+    $finalres = shell_exec('grep CA input.pdb |tail -1| awk \'{print $6}\'');
     $firstres = str_replace("\n", "", $firstres);
     $finalres = str_replace("\n", "", $finalres);
+    $firstres10 = intval($firstres - (($finalres - $firstres) / 20)); # Add 5% to the x axis to
+    $finalres10 = intval($finalres + (($finalres - $firstres) / 20)); # make the plot nicer
     $gnufile = fopen("results.gnu", "w");
     # Now read the results file for the jsmol and gnuplot parts
     $results_temp = shell_exec('cat results.txt | awk \'{print $2}\'');
@@ -197,8 +198,8 @@ function finished($jobid) {
         
     }
     copy("/var/www/html/critires/scripts/gnuplot.scr", "gnuplot.scr"); # Copy gnuplot script and modify it to our system
-    shell_exec("sed -i 's/lower/$firstres/' gnuplot.scr"); # Use sed to set lower residue number
-    shell_exec("sed -i 's/upper/$finalres/' gnuplot.scr"); # Use sed to set upper residue number
+    shell_exec("sed -i 's/lower/$firstres10/' gnuplot.scr"); # Use sed to set lower residue number
+    shell_exec("sed -i 's/upper/$finalres10/' gnuplot.scr"); # Use sed to set upper residue number
     shell_exec('gnuplot gnuplot.scr');
     # Now reate the webpage itself
     echo "Your job has finished and the results are available <a href=\"results.txt\">results.txt</a>.<br>";
