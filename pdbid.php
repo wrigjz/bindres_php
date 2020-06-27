@@ -38,17 +38,17 @@ fwrite($errfile_handle, "Preparing and checking the input files\n");
 fclose($errfile_handle);
 
 # Find the right PDB file and extract the chain we want
-echo 'cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh';
+#echo 'cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh';
 exec('cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh', $out, $ret_var);
 
 # Now submit the job to the qeuue system
 if ($ret_var == 0) {
-    echo "We will now queue the Critires job<br>";
-    echo '/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt';
+    echo "We will now queue the Critires job, please wait a few seconds to be directed to the running/results page.<br>";
+    #echo '/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt';
     exec('/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt');
     symlink($target_dir . 'error.txt', $result_dir . 'error_link.txt');
 } else {
-    echo 'rsync -av ' . $target_dir . ' ' . $result_dir;
+    #echo 'rsync -av ' . $target_dir . ' ' . $result_dir;
     exec('rsync -av ' . $target_dir . ' ' . $result_dir);
     exec('echo 999999.limlab >| ' . $result_dir . 'jobid.txt');
 }
