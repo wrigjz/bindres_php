@@ -51,15 +51,12 @@ if ($uploadOk == 0) {
         fclose($errfile_handle);
         echo "The file " . basename($_FILES["fileToUpload"]["name"]) . " has been uploaded.<br>";
         # Check the pdb file/chain structure before queueing
-        #echo 'cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh';
         exec('cd ' . $target_dir . '; /var/www/html/critires/scripts/get_check_chain.sh', $out, $ret_var);
         if ($ret_var == 0) { # All okay so queue the pdb file
             echo "We will now queue the Critires job, please wait a few seconds to be directed to the running/results page.<br>";
-            #echo '/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt';
             exec('/usr/local/bin/qsub -S /bin/bash /var/www/html/critires/scripts/submit.sub -N C_' . $rand_target . ' -v "random=' . $rand_target . '" > ' . $result_dir . 'jobid.txt');
             symlink($target_dir . 'error.txt', $result_dir . 'error_link.txt');
         } else { # Something wrong with the pdb file so give an error
-            #echo 'rsync -av ' . $target_dir . ' ' . $result_dir;
             exec('rsync -av ' . $target_dir . ' ' . $result_dir);
             exec('echo 999999.limlab >| ' . $result_dir . 'jobid.txt');
         }
