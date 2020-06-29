@@ -9,17 +9,15 @@
 # If a job is queued or running it tells yu anf gives the position and refreshes each minute
 # If it is finished then it creates the gnuplot file and asembles the lines
 # for jsmol
-# Open the random.txt file to get the job number from the file saved when it was queued
 
 # The main driver code is here, we get the jobid and then check the queue system to see if it is
 # Queded or Running or exiting, if it is neither then we check for a results file and if there is one we assume it is finished
 # If it is not in the queue system and the results file is empty we assume it has failed
-
-# Check for the jobid file,
+#
+# Open the random.txt file to get the job number from the file saved when it was submitted
 $jobfile = fopen("jobid.txt", "r") or die("Unable to open file!");
 $jobid = fgets($jobfile);
 fclose($jobfile);
-
 # Get the status and give the status as the header
 $my_temp = shell_exec("/usr/local/bin/qstat | grep $jobid");
 $job_status = preg_split('/\s+/', $my_temp);
@@ -38,68 +36,10 @@ if ($found == true) {
     failed($jobid);
 }
 
-# The function for if a job is missing or failed
-function failed($jobid) {
-    echo "<head>";
-    echo "<title>::: Failed at the Critital Residue Interface prediction server :::</title>";
-    echo "<meta charset=\"utf-8\">";
-    echo "</head>";
-    echo "<body BGCOLOR=\"#FFFFFF\">";
-    echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
-    echo "</center>";
-    echo "<H2>Job $jobid is Missing for some reason.</H2>";
-    if (filesize("error.txt") != 0 || filesize("critires.err") != 0) {
-        echo "To try to get an idea what is wrong<br>";
-    }
-    if (filesize("error.txt") != 0) {
-        echo "You can try looking at the <a href=\"error.txt\">error.txt</a> file,<br>";
-    }
-    if (filesize("critires.err") != 0) {
-        echo "You can try looking at the <a href=\"critires.err\">critires.err</a> file<br> ";
-    }
-}
-
-# The function for if we find a job is queued
-function queuedup($jobid) {
-    echo "<head>";
-    echo "<title>::: Queued  at the Critital Residue Interface prediction server :::</title>";
-    echo "<meta charset=\"utf-8\">";
-    echo "</head>";
-    echo "<body BGCOLOR=\"#FFFFFF\">";
-    echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
-    echo "</center>";
-    echo "<H2>Your job is $jobid and is currently in the queue for prediction.</H2>";
-    echo "This page will be updated every minute";
-    # Find queue status
-    echo "<pre>Q order  Q number                  Q Name<br></pre>";
-    $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep apache");
-    echo "<pre>$my_status</pre>";
-    status(); # Call the status function
-}
-
-# The function for if we find a job is running
-# In this case we parse the error_link.txt file and try to give feedback on how the 
-# processs is  going
-function running($jobid) {
-    echo "<head>";
-    echo "<title>::: Running  at the Critital Residue Interface prediction server :::</title>";
-    echo "<meta charset=\"utf-8\">";
-    echo "</head>";
-    echo "<body BGCOLOR=\"#FFFFFF\">";
-    echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
-    echo "</center>";
-    echo "<H2>Your job is $jobid and is currently running.</H2>";
-    echo "This page will be updated every minute";
-    # Find my job and print it out
-    echo "<pre>Q order  Q number                  Q Name<br></pre>";
-    $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep $jobid");
-    echo "<pre>$my_status</pre>";
-    status(); # Call the status function
-}
-
+# The functions sections
+# The status function is called from both the queued and running jobs to give feedback to the user
+# about what point their job has reached., this works by grepping the error_link.txt file for lines
+# that are printed out as the job progresses
 function status() {
     echo "Prepared input file: ";
     exec('grep "Preparing and checking the input files" error_link.txt', $out, $ret_val);
@@ -151,6 +91,66 @@ function status() {
         echo "&#9744<br>";
     }
     echo "<meta http-equiv=\"refresh\" content=\"60\"/>";
+}
+
+# The function for if a job is missing or failed
+function failed($jobid) {
+    echo "<head>";
+    echo "<title>::: Failed at the Critital Residue Interface prediction server :::</title>";
+    echo "<meta charset=\"utf-8\">";
+    echo "</head>";
+    echo "<body BGCOLOR=\"#FFFFFF\">";
+    echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
+    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "</center>";
+    echo "<H2>Job $jobid is Missing for some reason.</H2>";
+    if (filesize("error.txt") != 0 || filesize("critires.err") != 0) {
+        echo "To try to get an idea what is wrong<br>";
+    }
+    if (filesize("error.txt") != 0) {
+        echo "You can try looking at the <a href=\"error.txt\">error.txt</a> file,<br>";
+    }
+    if (filesize("critires.err") != 0) {
+        echo "You can try looking at the <a href=\"critires.err\">critires.err</a> file<br> ";
+    }
+}
+
+# The function for if we find a job is queued
+function queuedup($jobid) {
+    echo "<head>";
+    echo "<title>::: Queued  at the Critital Residue Interface prediction server :::</title>";
+    echo "<meta charset=\"utf-8\">";
+    echo "</head>";
+    echo "<body BGCOLOR=\"#FFFFFF\">";
+    echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
+    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "</center>";
+    echo "<H2>Your job is $jobid and is currently in the queue for prediction.</H2>";
+    echo "This page will be updated every minute";
+    # Find queue status
+    echo "<pre>Q order  Q number                  Q Name<br></pre>";
+    $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep apache");
+    echo "<pre>$my_status</pre>";
+    status(); # Call the status function
+}
+
+# The function for if we find a job is running
+function running($jobid) {
+    echo "<head>";
+    echo "<title>::: Running  at the Critital Residue Interface prediction server :::</title>";
+    echo "<meta charset=\"utf-8\">";
+    echo "</head>";
+    echo "<body BGCOLOR=\"#FFFFFF\">";
+    echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
+    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "</center>";
+    echo "<H2>Your job is $jobid and is currently running.</H2>";
+    echo "This page will be updated every minute";
+    # Find my job and print it out
+    echo "<pre>Q order  Q number                  Q Name<br></pre>";
+    $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep $jobid");
+    echo "<pre>$my_status</pre>";
+    status(); # Call the status function
 }
 
 # The function for if we find a job is finished
