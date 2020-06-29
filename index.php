@@ -72,14 +72,11 @@ function queuedup($jobid) {
     echo "</center>";
     echo "<H2>Your job is $jobid and is currently in the queue for prediction.</H2>";
     echo "This page will be updated every minute";
-    # Get the whole queue listing
-    $queue_status = shell_exec('/usr/local/bin/qstat -q');
-    echo "<pre>$queue_status</pre>";
-    # Find my job and print it out
+    # Find queue status
     echo "<pre>Q order  Q number                  Q Name<br></pre>";
     $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep apache");
     echo "<pre>$my_status</pre>";
-    echo "<meta http-equiv=\"refresh\" content=\"60\"/>";
+    status(); # Call the status function
 }
 
 # The function for if we find a job is running
@@ -100,6 +97,10 @@ function running($jobid) {
     echo "<pre>Q order  Q number                  Q Name<br></pre>";
     $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep $jobid");
     echo "<pre>$my_status</pre>";
+    status(); # Call the status function
+}
+
+function status() {
     echo "Prepared input file: ";
     exec('grep "Preparing and checking the input files" error_link.txt', $out, $ret_val);
     if ($ret_val == 0) {
