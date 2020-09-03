@@ -96,12 +96,12 @@ function status() {
 # The function for if a job is missing or failed
 function failed($jobid) {
     echo "<head>";
-    echo "<title>::: Failed at the Critital Residue Interface prediction server :::</title>";
+    echo "<title>::: Failed at the Binding Residue prediction server :::</title>";
     echo "<meta charset=\"utf-8\">";
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Binding Residue prediction server.";
     echo "</center>";
     echo "<H2>Job $jobid is Missing for some reason.</H2>";
     if (filesize("error.txt") != 0 || filesize("bindres.err") != 0) {
@@ -118,12 +118,12 @@ function failed($jobid) {
 # The function for if we find a job is queued
 function queuedup($jobid) {
     echo "<head>";
-    echo "<title>::: Queued  at the Critital Residue Interface prediction server :::</title>";
+    echo "<title>::: Queued  at the Binding Residue prediction server :::</title>";
     echo "<meta charset=\"utf-8\">";
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Binding Residue prediction server.";
     echo "</center>";
     echo "<H2>Your job is $jobid and is currently in the queue for prediction.</H2>";
     echo "This page will be updated every minute";
@@ -137,12 +137,12 @@ function queuedup($jobid) {
 # The function for if we find a job is running
 function running($jobid) {
     echo "<head>";
-    echo "<title>::: Running  at the Critital Residue Interface prediction server :::</title>";
+    echo "<title>::: Running  at the Binding Residue prediction server :::</title>";
     echo "<meta charset=\"utf-8\">";
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Binding Residue prediction server.";
     echo "</center>";
     echo "<H2>Your job is $jobid and is currently running.</H2>";
     echo "This page will be updated every minute";
@@ -158,12 +158,12 @@ function finished($jobid) {
     # array to hold the uppercase to lowercase resname
     $threeletter = array('ALA' => 'Ala', 'CYS' => 'Cys', 'CYX' => 'Cys', 'ASP' => 'Asp', 'GLU' => 'Glu', 'PHE' => 'Phe', 'GLY' => 'Gly', 'HIS' => 'His', 'HID' => 'His', 'HIE' => 'His', 'HIP' => 'His', 'ILE' => 'Ile', 'LYS' => 'Lys', 'LEU' => 'Leu', 'MET' => 'Met', 'ASN' => 'Asn', 'PRO' => 'Pro', 'GLN' => 'Gln', 'ARG' => 'Arg', 'SER' => 'Ser', 'THR' => 'Thr', 'VAL' => 'Val', 'TRP' => 'Trp', 'TYR' => 'Tyr');
     echo "<head>";
-    echo "<title>::: Finished  at the Critital Residue Interface prediction server :::</title>";
+    echo "<title>::: Finished  at the Binding Residue prediction server :::</title>";
     echo "<meta charset=\"utf-8\">";
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Binding Residue prediction server.";
     echo "</center>";
     $output = shell_exec('cat /var/www/html/bindres/scripts/jscript.scr'); # Setup jsmol environment
     echo $output; # Feed it to the browser
