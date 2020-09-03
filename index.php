@@ -5,7 +5,7 @@
 ## to copy, modify and distribute this script but all modifications must be offered
 ## back to the original authors
 ###################################################################################################
-# The is the master index file for the Critires Webserver - it is based on php ver. 7,
+# The is the master index file for the Bindres Webserver - it is based on php ver. 7,
 # If a job is queued or running it tells yu anf gives the position and refreshes each minute
 # If it is finished then it creates the gnuplot file and asembles the lines
 # for jsmol
@@ -101,17 +101,17 @@ function failed($jobid) {
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
     echo "</center>";
     echo "<H2>Job $jobid is Missing for some reason.</H2>";
-    if (filesize("error.txt") != 0 || filesize("critires.err") != 0) {
+    if (filesize("error.txt") != 0 || filesize("bindres.err") != 0) {
         echo "To try to get an idea what is wrong<br>";
     }
     if (filesize("error.txt") != 0) {
         echo "You can try looking at the <a href=\"error.txt\">error.txt</a> file,<br>";
     }
-    if (filesize("critires.err") != 0) {
-        echo "You can try looking at the <a href=\"critires.err\">critires.err</a> file<br> ";
+    if (filesize("bindres.err") != 0) {
+        echo "You can try looking at the <a href=\"bindres.err\">bindres.err</a> file<br> ";
     }
 }
 
@@ -123,7 +123,7 @@ function queuedup($jobid) {
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
     echo "</center>";
     echo "<H2>Your job is $jobid and is currently in the queue for prediction.</H2>";
     echo "This page will be updated every minute";
@@ -142,13 +142,13 @@ function running($jobid) {
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
     echo "</center>";
     echo "<H2>Your job is $jobid and is currently running.</H2>";
     echo "This page will be updated every minute";
     # Find my job and print it out
     echo "<pre>Q order  Q number                  Q Name<br></pre>";
-    $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep $jobid");
+    $my_status = shell_exec("/usr/local/bin/qstat | nl -v -2 | grep apache");
     echo "<pre>$my_status</pre>";
     status(); # Call the status function
 }
@@ -163,9 +163,9 @@ function finished($jobid) {
     echo "</head>";
     echo "<body BGCOLOR=\"#FFFFFF\">";
     echo "<center> <img src=\"../../images/as-en_07.gif\" alt=\"Academia Sinica Logo\">";
-    echo "<h2>Welcome to CritiRes, the Critital Residue Interface prediction server.";
+    echo "<h2>Welcome to BindRes, the Critital Residue Interface prediction server.";
     echo "</center>";
-    $output = shell_exec('cat /var/www/html/critires/scripts/jscript.scr'); # Setup jsmol environment
+    $output = shell_exec('cat /var/www/html/bindres/scripts/jscript.scr'); # Setup jsmol environment
     echo $output; # Feed it to the browser
     # Now get the number of residues in the PDB file for the gnuplot xaxis
     $firstres = shell_exec('grep CA input.pdb |head -1| awk \'{print $6}\'');
@@ -198,7 +198,7 @@ function finished($jobid) {
         fwrite($gnufile, $output); # Write the gnuplot data file
         
     }
-    copy("/var/www/html/critires/scripts/gnuplot.scr", "gnuplot.scr"); # Copy gnuplot script and modify it to our system
+    copy("/var/www/html/bindres/scripts/gnuplot.scr", "gnuplot.scr"); # Copy gnuplot script and modify it to our system
     shell_exec("sed -i 's/lower/$firstres10/' gnuplot.scr"); # Use sed to set lower residue number
     shell_exec("sed -i 's/upper/$finalres10/' gnuplot.scr"); # Use sed to set upper residue number
     shell_exec('gnuplot gnuplot.scr');
@@ -225,7 +225,7 @@ function finished($jobid) {
     fclose($file);
     echo "<p>Input pdb file is <a href=\"input.pdb\">here</a>, the conservation grades are <a href=\"frequency.txt\">here</a><br>";
     echo "<table border=\"1\"> <tr> <td>";
-    echo "<p>The image shows the backbone of your protein structure, the predicted CritiRes binding results are depicted in red. </p>";
+    echo "<p>The image shows the backbone of your protein structure, the predicted BindRes binding results are depicted in red. </p>";
     echo "<div style=\"width:650px;height:500px\" > <script type=\"text/javascript\"> myJmol1 = Jmol.getApplet(\"myJmol1\", myInfo1);";
     echo "Jmol.script(myJmol1, \"load input.pdb; spacefill off; wireframe off; backbone 0.6; color backbone none; select $saved; color red; wireframe 0.5\")";
     echo "</script>";
@@ -240,6 +240,6 @@ function finished($jobid) {
  are scored as 1, those not predicted to be involved are scored as 0.5.</h3>";
     echo "<center> <img src=\"gnuplot.png\" alt=\"Residues plot\" height=\"400\"></center>";
     echo "<hr style=\"border-style: solid; color: black;\">";
-    echo "<a href=\"https://critires.limlab.dnsalias.org\">CritiRes</a> is hosted at <a href=\"http://www.ibms.sinica.edu.tw\">The Institute of Biomedical Sciences</a>, <a href=\"http://www.sinica.edu.tw\">Academia Sinica</a>, Taipei 11529, Taiwan.";
+    echo "<a href=\"https://bindres.limlab.dnsalias.org\">BindRes</a> is hosted at <a href=\"http://www.ibms.sinica.edu.tw\">The Institute of Biomedical Sciences</a>, <a href=\"http://www.sinica.edu.tw\">Academia Sinica</a>, Taipei 11529, Taiwan.";
     echo "<hr style=\"border-style: solid; color: black;\">";
 }

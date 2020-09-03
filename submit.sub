@@ -1,6 +1,6 @@
 #PBS -N Cri
 #PBS -j eo
-#PBS -e /var/www/html/critires/results/$random/critires.err
+#PBS -e /var/www/html/bindres/results/$random/bindres.err
 #PBS -q batch
 #PBS -l nodes=1:ppn=4
 # This jobs working directory is set below
@@ -13,5 +13,5 @@ echo Working directory is `pwd`
 touch /scratch/working/$random/made_it
 
 # run the job
-/var/www/html/critires/scripts/critires.sh
-cp /scratch/working/$random/* /var/www/html/critires/results/$random/.
+/var/www/html/bindres/scripts/bindres.sh
+cp /scratch/working/$random/* /var/www/html/bindres/results/$random/.

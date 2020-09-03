@@ -8,13 +8,13 @@
 # Simple script to manage extracting the chain from a pdb file
 # and check pdb files for being single chain and also not missing backbones
 
-export scripts=/home/programs/critires_scripts
+export scripts=/home/programs/bindres_scripts
 source /home/programs/anaconda/linux-5.3.6/init.sh
 
 touch error.txt
 # Start off by seeing if we need to create the input file itself
 if [ -f list.txt ] ; then
-   python3 /var/www/html/critires/scripts/get_chain_from_pdb_archive.py list.txt
+   python3 /var/www/html/bindres/scripts/get_chain_from_pdb_archive.py list.txt
 fi
 # Check we had an input.pdb created
 if [ ! -s input.pdb ] ; then

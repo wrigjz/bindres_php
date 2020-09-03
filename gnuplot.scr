@@ -10,5 +10,5 @@ set xrange[lower:upper]
 set yrange[0:1.2]
 set nokey
 set xlabel "Residue number"
-set ylabel "Critical or not"
+set ylabel "Binding or not"
 plot 'results.gnu' w lines

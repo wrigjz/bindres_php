@@ -183,11 +183,24 @@ if [ $error -ne 0 ] ; then
        -l ./r4s.log -o ./r4s.res  -x r4s.txt >| r4s.out
     error=$?
 fi
-if [ $error -ne 0 ] ; then
-   echo "Both R4S failed so we" >> error.txt
-   echo $error >> error.txt
-   exit 1
+
+# Check if both rate4site fail, if so try the 150 homologue version
+if [ $? -ne 0 ] ; then
+    echo "R4S 3.0 and 2.0 failed so we'll try the 150 homolog  version"
+    echo "Aligning the 150 homologs"
+    $mafftdir/bin/mafft-linsi --quiet --localpair --maxiterate 1000 \
+      --thread $threads --namelength 30 ./150.fasta >| ./150.aln
+    error=$?
+    echo "Rate4site the 150 homolog"
+    $rate4sitedir/rate4site -ib -a 'PDB_ATOM' -s ./150.aln -zn $rate_model -bn \
+       -l ./r4s.log -o ./r4s.res  -x r4s.txt >| r4s.out
+    error1=$?
 fi
+if [ $error -ne 0 ] || [ $error1 -ne 0 ]; then
+    echo "We totally failed to get rate4site to work - sorry!"
+    exit 1
+fi
+
 echo "R4S finished time to grade now" >> error.txt
 
 # Turn those scores into grades
@@ -196,8 +209,8 @@ error=$?
 paste initial.grades frequency.txt >| consurf_home.grades
 error1=$?
 if [ $error -ne 0 ] || [ $error1 -ne 0 ]; then
-   echo "Final consurf grades calculations failed" >> error.txt
-   echo $error $error1 >> error.txt
-   exit 1
+    echo "Final consurf grades calculations failed" >> error.txt
+    echo $error $error1 >> error.txt
+    exit 1
 fi
 echo "Grading done, consurf finished" >> error.txt
