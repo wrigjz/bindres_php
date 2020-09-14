@@ -89,7 +89,7 @@ echo "Finished the HBPLus calculations:" >> error.txt
 
 ## This is for speedfill
 echo "About to run speedfill" >> error.txt
-$speedfill -f post_mini_noh.pdb -d -ntop 10 -min 1.2 -max 1.4 -log
+$speedfill -f post_mini_noh.pdb -d -ntop 10 -min 1.2 -max 1.7 -log
 error=$?
 echo "About to run a script to collect the residues near speedfiull spheres" >> error.txt
 python3  $scripts/speedfill_residues.py >| speedfill_residues.txt
