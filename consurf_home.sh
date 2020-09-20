@@ -66,7 +66,7 @@ fi
 
 # Jackhmmer the blast database looking for homologs
 echo "Jackhmmering the Uniref90 DB" >> error.txt
-$hmmerdir/binaries/jackhmmer -E 0.0001 --domE 0.0001 --incE 0.0001 -N 1 \
+$hmmerdir/binaries/jackhmmer -E 0.0001 --domE 0.0001 --incE 0.0001 -N 1 --cpu $threads \
         -o cons_hmmer.out -A uniref90_list.txt cons.fasta $dbdir/uniref90.fasta
 error=$?
 
