@@ -50,6 +50,9 @@ if [ $error -ne 0 ] || [ $error1 -ne 0 ] ; then
 fi
 echo "Finished the Consurf calculations:" >> error.txt
 
+# Just incase consurf failed create a dummy file
+touch consurf.txt
+
 # Sort out the SASA values
 echo "About to start the FreeSASA calculations:" >> error.txt
 $freesasa --config-file $scripts/protor.config --format=seq post_minix.pdb >| post_mini.sasa
