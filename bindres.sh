@@ -9,8 +9,6 @@
 
 export hbplus=/home/programs/hbplus-3.06.linux/hbplus
 export freesasa=/home/programs/freesasa-2.03/linux/bin/freesasa
-export speedfill=/home/programs/speedfill/speedfill.linux
-export pymol=/home/programs/anaconda/linux-5.3.6/bin/pymol
 export scripts=/home/programs/bindres_scripts
 export consurf_scripts=/home/programs/consurf_scripts
 source /home/programs/anaconda/linux-5.3.6/init.sh
@@ -89,20 +87,6 @@ if [ $error -ne 0 ] ; then
      exit 1
 fi
 echo "Finished the HBPLus calculations:" >> error.txt
-
-## This is for speedfill
-echo "About to run speedfill" >> error.txt
-$speedfill -f post_mini_noh.pdb -d -ntop 10 -min 1.2 -max 1.7 -log
-error=$?
-echo "About to run a script to collect the residues near speedfiull spheres" >> error.txt
-python3  $scripts/speedfill_residues.py >| speedfill_residues.txt
-error1=$?
-if [ $error -ne 0 ] || [ $error1 -ne 0 ]; then
-     echo "Something went wrong running speedfill or collectings its results" >> error.txt
-     echo $error $error1 >> error.txt
-     exit 1
-fi
-echo "Finished running speedfill:" >> error.txt
 
 # Pull all the data togeather
 echo "About to assemble all the data:" >> error.txt
